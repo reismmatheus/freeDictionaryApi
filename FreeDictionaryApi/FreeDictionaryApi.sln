@@ -3,7 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32819.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeDictionary.API", "FreeDictionary.API\FreeDictionary.API.csproj", "{8E57664E-E373-435F-99D5-84EB9ACFA989}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreeDictionary.API", "FreeDictionary.API\FreeDictionary.API.csproj", "{8E57664E-E373-435F-99D5-84EB9ACFA989}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeDictionary.Application", "FreeDictionary.Application\FreeDictionary.Application.csproj", "{43BA271D-1CBF-4A95-9888-7F2B06839AB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeDictionary.Domain", "FreeDictionary.Domain\FreeDictionary.Domain.csproj", "{1EED3998-F27D-422A-96BD-407065538616}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeDictionary.Data", "FreeDictionary.Data\FreeDictionary.Data.csproj", "{D5F32F8D-A561-468C-A2B4-FC1051D3555F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeDictionary.Service", "FreeDictionary.Service\FreeDictionary.Service.csproj", "{0CDAE4B4-6954-4E33-A700-569FB9F588B5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +23,22 @@ Global
 		{8E57664E-E373-435F-99D5-84EB9ACFA989}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E57664E-E373-435F-99D5-84EB9ACFA989}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E57664E-E373-435F-99D5-84EB9ACFA989}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43BA271D-1CBF-4A95-9888-7F2B06839AB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43BA271D-1CBF-4A95-9888-7F2B06839AB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43BA271D-1CBF-4A95-9888-7F2B06839AB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43BA271D-1CBF-4A95-9888-7F2B06839AB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EED3998-F27D-422A-96BD-407065538616}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EED3998-F27D-422A-96BD-407065538616}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EED3998-F27D-422A-96BD-407065538616}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EED3998-F27D-422A-96BD-407065538616}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5F32F8D-A561-468C-A2B4-FC1051D3555F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5F32F8D-A561-468C-A2B4-FC1051D3555F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5F32F8D-A561-468C-A2B4-FC1051D3555F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5F32F8D-A561-468C-A2B4-FC1051D3555F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CDAE4B4-6954-4E33-A700-569FB9F588B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CDAE4B4-6954-4E33-A700-569FB9F588B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CDAE4B4-6954-4E33-A700-569FB9F588B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CDAE4B4-6954-4E33-A700-569FB9F588B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
