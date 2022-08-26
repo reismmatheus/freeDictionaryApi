@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace FreeDictionary.Domain
 {
-    public class HistoryWord
+    public class HistoryWord : Entity
     {
+        public Guid UserId { get; set; }
         public string Word { get; set; }
         public virtual User User { get; set; }
     }
