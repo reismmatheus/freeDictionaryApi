@@ -12,5 +12,10 @@ namespace FreeDictionary.API.Controllers
         {
             return View();
         }
+        [HttpPost("Singin")]
+        public ActionResult Singin()
+        {
+            return View();
+        }
     }
 }
