@@ -26,7 +26,7 @@ namespace FreeDictionary.Service.FreeDictionaryApi
         }
         public async Task<List<string>> Download()
         {
-            var response = await _client.GetAsync($"{_urlFile}}");
+            var response = await _client.GetAsync($"{_urlFile}");
             var result = JsonSerializer.Deserialize<List<string>>(response.ToString());
             return result;
         }
