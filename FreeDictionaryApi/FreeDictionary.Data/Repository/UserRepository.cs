@@ -34,9 +34,36 @@ namespace FreeDictionary.Data.Repository
             return user;
         }
 
-        public async Task<User?> CreateAsync(User user)
+        public async Task<User> AddAsync(string name, string email, string password)
+        {
+            byte[] passwordHash, passwordSalt;
+            CreatePasswordHash(password, out passwordHash, out passwordSalt);
+
+            var user = new User
+            {
+                Name = name,
+                Email = email,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt
+            };
+
+            await _context.AddAsync(user);
+            await _context.SaveChangesAsync();
+            return user;
+        }
+
+        public override Task<User?> AddAsync(User user)
         {
             throw new NotImplementedException();
+        }
+
+        private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        {
+            using (var hmac = new System.Security.Cryptography.HMACSHA512())
+            {
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            }
         }
 
         private static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
@@ -48,7 +75,7 @@ namespace FreeDictionary.Data.Repository
 
             using (var hmac = new System.Security.Cryptography.HMACSHA512(storedSalt))
             {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
                 for (int i = 0; i < computedHash.Length; i++)
                 {
                     if (computedHash[i] != storedHash[i]) return false;

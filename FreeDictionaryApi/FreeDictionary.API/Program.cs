@@ -1,17 +1,27 @@
+using FreeDictionary.Application.Business;
+using FreeDictionary.Application.Interface;
 using FreeDictionary.Data.Context;
+using FreeDictionary.Data.Interface;
+using FreeDictionary.Data.Repository;
+using FreeDictionary.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var sqlConnectionString = builder.Configuration.GetValue<string>("ConnectionStrings:Sql");
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<FreeDictionaryContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("")));
-builder.Services.AddScoped<FreeDictionaryContext, FreeDictionaryContext>();
+builder.Services.AddTransient<FreeDictionaryContext, FreeDictionaryContext>();
+
+builder.Services.AddTransient<IUserRepository, UserRepository>();
+
+builder.Services.AddTransient<IAuthBusiness, AuthBusiness>();
+
+builder.Services.AddDbContext<FreeDictionaryContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString(sqlConnectionString)));
 
 var app = builder.Build();
 

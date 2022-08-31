@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FreeDictionary.Application\FreeDictionary.Application.csproj" />
     <ProjectReference Include="..\FreeDictionary.Data\FreeDictionary.Data.csproj" />
   </ItemGroup>
 

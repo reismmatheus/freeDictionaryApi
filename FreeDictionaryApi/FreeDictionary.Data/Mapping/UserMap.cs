@@ -26,9 +26,14 @@ namespace FreeDictionary.Data.Mapping
                 .HasColumnName("Email")
                 .HasColumnType("VARCHAR(256)");
 
-            builder.Property(x => x.Password)
+            builder.Property(x => x.PasswordHash)
                 .IsRequired()
-                .HasColumnName("Password")
+                .HasColumnName("PasswordHash")
+                .HasColumnType("VARCHAR(256)");
+
+            builder.Property(x => x.PasswordSalt)
+                .IsRequired()
+                .HasColumnName("PasswordSalt")
                 .HasColumnType("VARCHAR(256)");
 
             builder.Property(x => x.Active)

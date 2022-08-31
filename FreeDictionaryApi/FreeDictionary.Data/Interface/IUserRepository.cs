@@ -10,6 +10,6 @@ namespace FreeDictionary.Data.Interface
     public interface IUserRepository
     {
         Task<User> AuthenticateAsync(string email, string password);
-        Task<User> CreateAsync(User user);
+        Task<User> AddAsync(string name, string email, string password);
     }
 }

@@ -19,7 +19,7 @@ namespace FreeDictionary.Data.Repository
             _context = context;
         }
 
-        public async Task AddAsync(TEntity entity)
+        public virtual async Task AddAsync(TEntity entity)
         {
             await _context.Set<TEntity>().AddAsync(entity);
             await _context.SaveChangesAsync();

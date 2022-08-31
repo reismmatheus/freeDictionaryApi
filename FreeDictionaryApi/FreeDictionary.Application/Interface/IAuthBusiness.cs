@@ -10,6 +10,6 @@ namespace FreeDictionary.Application.Interface
     public interface IAuthBusiness
     {
         Task<SinginResponse> Singim(SinginModel model);
-        Task<SingupModel> Singup(SingupModel model);
+        Task<SingupResponse> Singup(SingupModel model);
     }
 }

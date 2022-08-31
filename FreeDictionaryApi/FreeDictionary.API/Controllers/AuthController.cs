@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FreeDictionary.Application.Interface;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static FreeDictionary.Application.Model.AuthModel;
 
 namespace FreeDictionary.API.Controllers
 {
@@ -7,14 +9,22 @@ namespace FreeDictionary.API.Controllers
     [Route("[controller]")]
     public class AuthController : Controller
     {
-        [HttpPost("Singup")]
-        public ActionResult Singup()
+        private readonly IAuthBusiness _authBusiness;
+        public AuthController(IAuthBusiness authBusiness)
         {
-            return View();
+            _authBusiness = authBusiness;
+        }
+
+        [HttpPost("Singup")]
+        public async Task<IActionResult> Singup(SingupModel model)
+        {
+            var user = await _authBusiness.Singup(model);
+            return Ok();
         }
         [HttpPost("Singin")]
-        public ActionResult Singin()
+        public async Task<IActionResult> Singin(SinginModel model)
         {
+            var user = await _authBusiness.Singim(model);
             return View();
         }
     }
