@@ -21,7 +21,11 @@ builder.Services.AddTransient<IUserRepository, UserRepository>();
 
 builder.Services.AddTransient<IAuthBusiness, AuthBusiness>();
 
-builder.Services.AddDbContext<FreeDictionaryContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString(sqlConnectionString)));
+var connectionString = builder.Configuration.GetConnectionString(@"Data Source=DESKTOP-M9CNHCN\SQLEXPRESS;Initial Catalog=freeDictionaryApi;Integrated Security=True");
+// sqlConnectionString
+
+
+builder.Services.AddDbContext<FreeDictionaryContext>(options => options.UseSqlServer(@"Data Source=DESKTOP-M9CNHCN\SQLEXPRESS;Initial Catalog=freeDictionaryApi;Integrated Security=True"));
 
 var app = builder.Build();
 
