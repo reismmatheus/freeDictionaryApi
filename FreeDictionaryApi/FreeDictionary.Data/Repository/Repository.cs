@@ -21,13 +21,16 @@ namespace FreeDictionary.Data.Repository
 
         public virtual async Task AddAsync(TEntity entity)
         {
+            entity.CreatedIn = DateTime.UtcNow;
             await _context.Set<TEntity>().AddAsync(entity);
             await _context.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            //var entity = await GetByIdAsync(id);
+            //entity.IsDeleted = true;
+            //await _context.SaveChangesAsync();
         }
 
         public async Task<IList<TEntity>> GetAllAsync()
@@ -47,6 +50,7 @@ namespace FreeDictionary.Data.Repository
 
         public async Task UpdateAsync(TEntity entity)
         {
+            entity.UpdatedIn = DateTime.UtcNow;
             _context.Entry(entity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
