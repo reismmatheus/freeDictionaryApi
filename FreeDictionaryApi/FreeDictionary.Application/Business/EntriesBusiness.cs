@@ -14,11 +14,13 @@ namespace FreeDictionary.Application.Business
     {
         private readonly IFavoriteWordRepository _favoriteWordRepository;
         private readonly IHistoryWordRepository _historyWordRepository;
+        private readonly IWordRepository _wordRepository;
         private readonly IFreeDictionaryApiClient _freeDictionaryApiClient;
-        public EntriesBusiness(IFavoriteWordRepository favoriteWordRepository, IHistoryWordRepository historyWordRepository, IFreeDictionaryApiClient freeDictionaryApiClient)
+        public EntriesBusiness(IFavoriteWordRepository favoriteWordRepository, IHistoryWordRepository historyWordRepository, IWordRepository wordRepository, IFreeDictionaryApiClient freeDictionaryApiClient)
         {
             _favoriteWordRepository = favoriteWordRepository;
             _historyWordRepository = historyWordRepository;
+            _wordRepository = wordRepository;
             _freeDictionaryApiClient = freeDictionaryApiClient;
         }
         public async Task AddFavoriteAsync(string word)
@@ -31,13 +33,17 @@ namespace FreeDictionary.Application.Business
 
         public async Task DownloadWordsAsync()
         {
-            var words = _freeDictionaryApiClient.DownloadWords();
-            throw new NotImplementedException();
+            var words = await _freeDictionaryApiClient.DownloadWords();
+            var wordsList = new List<Word>();
+            foreach (var item in words)
+            {
+                wordsList.Add(new Word { Name = item });
+            }
+            await _wordRepository.AddRangeAsync(wordsList);
         }
 
-        public Task GetAsync(string search, int limit)
+        public async Task GetAsync(string search, int limit)
         {
-            throw new NotImplementedException();
         }
 
         public Task GetByWordAsync(string word)

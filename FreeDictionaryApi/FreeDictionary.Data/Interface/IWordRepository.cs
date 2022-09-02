@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace FreeDictionary.Data.Interface
 {
-    public interface IUserRepository : IRepository<User>
+    public interface IWordRepository : IRepository<Word>
     {
-        Task<User> AuthenticateAsync(string email, string password);
-        Task<User> AddAsync(string name, string email, string password);
+        Task AddRangeAsync(List<Word> words);
     }
 }
