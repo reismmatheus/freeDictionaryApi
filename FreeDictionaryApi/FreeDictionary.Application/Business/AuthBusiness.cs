@@ -10,6 +10,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using static FreeDictionary.Application.Model.AuthModel;
 
 namespace FreeDictionary.Application.Business
 {
@@ -21,16 +22,36 @@ namespace FreeDictionary.Application.Business
         {
             _userRepository = userRepository;
         }
-        public async Task<AuthModel.SinginResponse> Singim(AuthModel.SinginModel model)
+        public async Task<SinginResponse?> Singin(SinginModel model)
         {
             var user = await _userRepository.AuthenticateAsync(model.Email, model.Password);
-            return default;
+
+            if (user == null)
+                return null;
+
+            var token = CreateToken(user.Id, user.Email, user.Name);
+            return new SinginResponse
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Token = token
+            };
         }
 
-        public async Task<AuthModel.SingupResponse> Singup(AuthModel.SingupModel model)
+        public async Task<SingupResponse?> Singup(SingupModel model)
         {
             var user = await _userRepository.AddAsync(model.Name, model.Email, model.Password);
-            return default;
+
+            if (user == null)
+                return null;
+
+            var token = CreateToken(user.Id, user.Email, user.Name);
+            return new SingupResponse
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Token = token
+            };
         }
 
         private string CreateToken(Guid id, string email, string name)

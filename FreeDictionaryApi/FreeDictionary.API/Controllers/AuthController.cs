@@ -18,14 +18,23 @@ namespace FreeDictionary.API.Controllers
         [HttpPost("Singup")]
         public async Task<IActionResult> Singup(SingupModel model)
         {
-            var user = await _authBusiness.Singup(model);
-            return Ok();
+            var result = await _authBusiness.Singup(model);
+
+            if (result == null)
+                return BadRequest(new { message = "Error message" });
+
+            return Ok(result);
         }
+
         [HttpPost("Singin")]
         public async Task<IActionResult> Singin(SinginModel model)
         {
-            var user = await _authBusiness.Singim(model);
-            return View();
+            var result = await _authBusiness.Singin(model);
+
+            if(result == null)
+                return BadRequest(new { message = "Error message" });
+
+            return Ok(result);
         }
     }
 }

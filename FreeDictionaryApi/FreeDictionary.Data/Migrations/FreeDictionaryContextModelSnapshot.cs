@@ -48,7 +48,7 @@ namespace FreeDictionary.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FavoriteWord");
+                    b.ToTable("FavoriteWord", (string)null);
                 });
 
             modelBuilder.Entity("FreeDictionary.Domain.HistoryWord", b =>
@@ -77,7 +77,7 @@ namespace FreeDictionary.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("HistoryWord");
+                    b.ToTable("HistoryWord", (string)null);
                 });
 
             modelBuilder.Entity("FreeDictionary.Domain.User", b =>
@@ -116,7 +116,7 @@ namespace FreeDictionary.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("FreeDictionary.Domain.FavoriteWord", b =>

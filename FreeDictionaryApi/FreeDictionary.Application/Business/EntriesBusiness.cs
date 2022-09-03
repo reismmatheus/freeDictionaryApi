@@ -44,16 +44,17 @@ namespace FreeDictionary.Application.Business
 
         public async Task GetAsync(string search, int limit)
         {
+            var words = await _wordRepository.GetItemAsync(x => x.Name == search);
         }
 
-        public Task GetByWordAsync(string word)
+        public async Task GetByWordAsync(string word)
         {
-            throw new NotImplementedException();
+            var wordResult = await _freeDictionaryApiClient.GetWord(word);
         }
 
-        public Task RemoveFavoriteAsync(string word)
+        public async Task RemoveFavoriteAsync(string word)
         {
-            throw new NotImplementedException();
+            var wordResult = await _favoriteWordRepository.GetItemAsync(x => x.Word == word);
         }
     }
 }
