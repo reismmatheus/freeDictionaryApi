@@ -9,8 +9,8 @@ namespace FreeDictionary.Application.Interface
 {
     public interface IUserBusiness
     {
-        Task<UserMeModel> GetProfile();
-        Task<IList<UserWordAdded>> GetHistory();
-        Task<IList<UserWordAdded>> GetFavorities();
+        Task<UserMeModel> GetProfile(string userId);
+        Task<IList<UserWordAdded>> GetHistory(string userId);
+        Task<IList<UserWordAdded>> GetFavorities(string userId);
     }
 }

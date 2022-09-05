@@ -1,4 +1,5 @@
 ﻿using FreeDictionary.Application.Interface;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,22 +18,25 @@ namespace FreeDictionary.API.Controllers
         [HttpGet("Me")]
         public async Task<IActionResult> GetProfile()
         {
-            var profile = await _userBusiness.GetProfile();
-            return View();
+            var userId = User.Identity.GetUserId();
+            var profile = await _userBusiness.GetProfile(userId);
+            return Ok(profile);
         }
 
         [HttpGet("Me/History")]
         public async Task<IActionResult> GetHistory()
         {
-            var history = await _userBusiness.GetHistory();
-            return View();
+            var userId = User.Identity.GetUserId();
+            var history = await _userBusiness.GetHistory(userId);
+            return Ok(history);
         }
 
         [HttpGet("Me/Favorities")]
         public async Task<IActionResult> GetFavorities()
         {
-            var favorities = await _userBusiness.GetFavorities();
-            return View();
+            var userId = User.Identity.GetUserId();
+            var favorities = await _userBusiness.GetFavorities(userId);
+            return Ok(favorities);
         }
     }
 }
