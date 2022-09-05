@@ -14,5 +14,8 @@ namespace FreeDictionary.Data.Context
         { }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<FavoriteWord> FavoriteWords { get; set; }
+        public DbSet<HistoryWord> HistoryWords { get; set; }
+        public DbSet<Word> Words { get; set; }
     }
 }

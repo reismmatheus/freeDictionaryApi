@@ -10,5 +10,6 @@ namespace FreeDictionary.Data.Interface
     public interface IWordRepository : IRepository<Word>
     {
         Task AddRangeAsync(List<Word> words);
+        Task TruncateTableAsync();
     }
 }

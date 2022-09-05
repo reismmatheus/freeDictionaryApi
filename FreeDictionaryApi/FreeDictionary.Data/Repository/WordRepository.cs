@@ -1,6 +1,7 @@
 ﻿using FreeDictionary.Data.Context;
 using FreeDictionary.Data.Interface;
 using FreeDictionary.Domain;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,11 @@ namespace FreeDictionary.Data.Repository
         {
             await _context.AddRangeAsync(words);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task TruncateTableAsync()
+        {
+            await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE [Words]");
         }
     }
 }

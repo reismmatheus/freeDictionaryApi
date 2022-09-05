@@ -10,7 +10,7 @@ namespace FreeDictionary.Application.Interface
     {
         Task GetAsync(string search, int limit);
         Task GetByWordAsync(string word);
-        Task DownloadWordsAsync();
+        Task<bool> DownloadWordsAsync();
         Task AddFavoriteAsync(string word);
         Task RemoveFavoriteAsync(string word);
     }

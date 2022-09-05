@@ -31,15 +31,22 @@ namespace FreeDictionary.Application.Business
             });
         }
 
-        public async Task DownloadWordsAsync()
+        public async Task<bool> DownloadWordsAsync()
         {
             var words = await _freeDictionaryApiClient.DownloadWords();
+            if (words == null || words.Count == 0)
+                return false;
+
             var wordsList = new List<Word>();
             foreach (var item in words)
             {
-                wordsList.Add(new Word { Name = item });
+                wordsList.Add(new Word { Name = item, CreatedIn = DateTime.UtcNow });
             }
+
+            await _wordRepository.TruncateTableAsync();
             await _wordRepository.AddRangeAsync(wordsList);
+
+            return true;
         }
 
         public async Task GetAsync(string search, int limit)
