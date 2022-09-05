@@ -5,8 +5,12 @@ using FreeDictionary.Data.Interface;
 using FreeDictionary.Data.Repository;
 using FreeDictionary.Domain;
 using FreeDictionary.Service.FreeDictionaryApi;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,9 +72,40 @@ builder.Services.AddHttpClient();
 
 #endregion
 
-//builder.Services.AddTransient<IUserRepository, UserRepository>();
-
-//builder.Services.AddTransient<IAuthBusiness, AuthBusiness>();
+var key = Encoding.ASCII.GetBytes("262db528-2080-4fb0-b15d-8a96764a33a7");  //appSettings.Secret
+builder.Services
+    .AddAuthentication(x =>
+    {
+        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+     .AddJwtBearer(x =>
+     {
+         x.Events = new JwtBearerEvents
+         {
+             //OnTokenValidated = context =>
+             //{
+             //    //var userRepository = context.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
+             //    //var userId = context.Principal.Identity.Name;
+             //    //var user = userRepository.GetByIdAsync(new Guid(userId));
+             //    //if (user == null)
+             //    //{
+             //    //    // return unauthorized if user no longer exists
+             //    //    context.Fail("Unauthorized");
+             //    //}
+             //    return Task.CompletedTask;
+             //}
+         };
+         x.RequireHttpsMetadata = false;
+         x.SaveToken = true;
+         x.TokenValidationParameters = new TokenValidationParameters
+         {
+             ValidateIssuerSigningKey = true,
+             IssuerSigningKey = new SymmetricSecurityKey(key),
+             ValidateIssuer = false,
+             ValidateAudience = false
+         };
+     });
 
 var connectionString = builder.Configuration.GetConnectionString(@"Data Source=DESKTOP-M9CNHCN\SQLEXPRESS;Initial Catalog=freeDictionaryApi;Integrated Security=True");
 // sqlConnectionString
@@ -88,6 +123,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

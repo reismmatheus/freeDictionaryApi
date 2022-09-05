@@ -1,8 +1,11 @@
 ﻿using FreeDictionary.Application.Interface;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FreeDictionary.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class EntriesController : Controller
@@ -12,6 +15,7 @@ namespace FreeDictionary.API.Controllers
         {
             _entriesBusiness = entriesBusiness;
         }
+
         [HttpGet("Download")]
         public async Task<IActionResult> Download()
         {
@@ -21,6 +25,16 @@ namespace FreeDictionary.API.Controllers
                 return BadRequest();
 
             return NoContent();
+        }
+
+        [HttpGet("{language}/{word}")]
+        public async Task<IActionResult> GetWord(string language, string word)
+        {
+            var userId = User.Identity.GetUserId();
+
+            var meaning = await _entriesBusiness.GetByWordAsync(userId, word);
+
+            return Ok(meaning);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace FreeDictionary.API.Controllers
             var result = await _authBusiness.Singin(model);
 
             if(result == null)
-                return BadRequest(new { message = "Error message" });
+                return Unauthorized();
 
             return Ok(result);
         }

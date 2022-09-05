@@ -9,9 +9,9 @@ namespace FreeDictionary.Application.Interface
     public interface IEntriesBusiness
     {
         Task GetAsync(string search, int limit);
-        Task GetByWordAsync(string word);
+        Task<object?> GetByWordAsync(string userId, string word);
         Task<bool> DownloadWordsAsync();
-        Task AddFavoriteAsync(string word);
-        Task RemoveFavoriteAsync(string word);
+        Task AddFavoriteAsync(string userId, string word);
+        Task RemoveFavoriteAsync(string userId, string word);
     }
 }

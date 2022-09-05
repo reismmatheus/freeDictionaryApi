@@ -20,11 +20,12 @@ namespace FreeDictionary.Service.FreeDictionaryApi
             _apiUrl = "https://api.dictionaryapi.dev/api/v2/entries/en";
             _fileUrl = "https://raw.githubusercontent.com/meetDeveloper/freeDictionaryAPI/master/meta/wordList/english.txt";
         }
-        public async Task<FreeDictionaryApiResult?> GetWord(string word)
+        public async Task<object?> GetWord(string word)
         {
             var response = await _client.GetAsync($"{_apiUrl}/{word}");
-            var result = JsonSerializer.Deserialize<List<FreeDictionaryApiResult>>(response.ToString());
-            return result.FirstOrDefault();
+            var responseString = await response.Content.ReadAsStringAsync();
+            var result = JsonSerializer.Deserialize<object>(responseString);
+            return result;
         }
         public async Task<List<string>> DownloadWords()
         {

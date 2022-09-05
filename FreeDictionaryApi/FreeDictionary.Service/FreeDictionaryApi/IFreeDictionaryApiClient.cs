@@ -9,7 +9,7 @@ namespace FreeDictionary.Service.FreeDictionaryApi
 {
     public interface IFreeDictionaryApiClient
     {
-        Task<FreeDictionaryApiResult> GetWord(string word);
+        Task<object> GetWord(string word);
         Task<List<string>> DownloadWords();
     }
 }

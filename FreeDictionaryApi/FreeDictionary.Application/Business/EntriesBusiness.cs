@@ -23,7 +23,7 @@ namespace FreeDictionary.Application.Business
             _wordRepository = wordRepository;
             _freeDictionaryApiClient = freeDictionaryApiClient;
         }
-        public async Task AddFavoriteAsync(string word)
+        public async Task AddFavoriteAsync(string userId, string word)
         {
             await _favoriteWordRepository.AddAsync(new FavoriteWord
             {
@@ -54,12 +54,14 @@ namespace FreeDictionary.Application.Business
             var words = await _wordRepository.GetItemAsync(x => x.Name == search);
         }
 
-        public async Task GetByWordAsync(string word)
+        public async Task<object?> GetByWordAsync(string userId, string word)
         {
+            await _historyWordRepository.AddAsync(new HistoryWord { Word = word, UserId = new Guid(userId) });
             var wordResult = await _freeDictionaryApiClient.GetWord(word);
+            return wordResult;
         }
 
-        public async Task RemoveFavoriteAsync(string word)
+        public async Task RemoveFavoriteAsync(string userId, string word)
         {
             var wordResult = await _favoriteWordRepository.GetItemAsync(x => x.Word == word);
         }
