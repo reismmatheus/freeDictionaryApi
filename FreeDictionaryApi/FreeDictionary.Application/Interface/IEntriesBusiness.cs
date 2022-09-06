@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FreeDictionary.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace FreeDictionary.Application.Interface
 {
     public interface IEntriesBusiness
     {
-        Task GetAsync(string search, int limit);
+        Task<IList<Word>> GetAsync(string search, int page, int limit);
         Task<object?> GetByWordAsync(string userId, string word);
         Task<bool> DownloadWordsAsync();
         Task<bool> AddFavoriteAsync(string userId, string word);

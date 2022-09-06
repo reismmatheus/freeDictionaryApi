@@ -16,8 +16,8 @@ namespace FreeDictionary.API.Controllers
             _entriesBusiness = entriesBusiness;
         }
 
-        [HttpGet("Download")]
-        public async Task<IActionResult> Download()
+        [HttpGet("{language}/Download")]
+        public async Task<IActionResult> Download(string language)
         {
             var result = await _entriesBusiness.DownloadWordsAsync();
 
@@ -25,6 +25,12 @@ namespace FreeDictionary.API.Controllers
                 return BadRequest();
 
             return NoContent();
+        }
+        [HttpGet("{language}")]
+        public async Task<IActionResult> Get(string language, string search, int page = 1, int limit = 10)
+        {
+            var words = await _entriesBusiness.GetAsync(search, page, limit);
+            return Ok(words);
         }
 
         [HttpGet("{language}/{word}")]

@@ -28,5 +28,14 @@ namespace FreeDictionary.Data.Repository
         {
             await _context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE [Words]");
         }
+
+        public async Task<IList<Word>> GetBySearchAsync(string search, int page = 1, int limit = 10)
+        {
+            var query = (from w in _context.Words
+                        where w.Name.Contains(search)
+                        select w).Skip(page).Take(limit);
+
+            return query.ToList();
+        }
     }
 }

@@ -41,19 +41,17 @@ namespace FreeDictionary.Application.Business
 
             return true;
         }
-
-        public async Task GetAsync(string search, int limit)
+        public async Task<IList<Word>> GetAsync(string search, int page = 1, int limit = 10)
         {
-            var words = await _wordRepository.GetItemAsync(x => x.Name == search);
+            var words = await _wordRepository.GetBySearchAsync(search, page, limit);
+            return words;
         }
-
         public async Task<object?> GetByWordAsync(string userId, string word)
         {
             await _historyWordRepository.AddAsync(new HistoryWord { Word = word, UserId = new Guid(userId) });
             var wordResult = await _freeDictionaryApiClient.GetWord(word);
             return wordResult;
         }
-
         public async Task<bool> AddFavoriteAsync(string userId, string word)
         {
             var favoriteWord = await _favoriteWordRepository.GetItemAsync(x => x.UserId == new Guid(userId) && x.Word == word);
@@ -68,7 +66,6 @@ namespace FreeDictionary.Application.Business
             });
             return true;
         }
-
         public async Task RemoveFavoriteAsync(string userId, string word)
         {
             await _favoriteWordRepository.DeleteAsync(userId, word);
