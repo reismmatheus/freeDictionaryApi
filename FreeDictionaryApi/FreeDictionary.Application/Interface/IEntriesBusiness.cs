@@ -11,7 +11,7 @@ namespace FreeDictionary.Application.Interface
         Task GetAsync(string search, int limit);
         Task<object?> GetByWordAsync(string userId, string word);
         Task<bool> DownloadWordsAsync();
-        Task AddFavoriteAsync(string userId, string word);
+        Task<bool> AddFavoriteAsync(string userId, string word);
         Task RemoveFavoriteAsync(string userId, string word);
     }
 }

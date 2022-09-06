@@ -23,13 +23,6 @@ namespace FreeDictionary.Application.Business
             _wordRepository = wordRepository;
             _freeDictionaryApiClient = freeDictionaryApiClient;
         }
-        public async Task AddFavoriteAsync(string userId, string word)
-        {
-            await _favoriteWordRepository.AddAsync(new FavoriteWord
-            {
-                Word = word
-            });
-        }
 
         public async Task<bool> DownloadWordsAsync()
         {
@@ -61,9 +54,24 @@ namespace FreeDictionary.Application.Business
             return wordResult;
         }
 
+        public async Task<bool> AddFavoriteAsync(string userId, string word)
+        {
+            var favoriteWord = await _favoriteWordRepository.GetItemAsync(x => x.UserId == new Guid(userId) && x.Word == word);
+
+            if (favoriteWord == null || favoriteWord.Count > 0)
+                return false;
+
+            await _favoriteWordRepository.AddAsync(new FavoriteWord
+            {
+                Word = word,
+                UserId = new Guid(userId)
+            });
+            return true;
+        }
+
         public async Task RemoveFavoriteAsync(string userId, string word)
         {
-            var wordResult = await _favoriteWordRepository.GetItemAsync(x => x.Word == word);
+            await _favoriteWordRepository.DeleteAsync(userId, word);
         }
     }
 }

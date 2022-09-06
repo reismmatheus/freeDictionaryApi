@@ -1,5 +1,6 @@
 using FreeDictionary.Application.Business;
 using FreeDictionary.Application.Interface;
+using FreeDictionary.Application.Model;
 using FreeDictionary.Data.Context;
 using FreeDictionary.Data.Interface;
 using FreeDictionary.Data.Repository;
@@ -9,12 +10,17 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System.Data.Entity;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var sqlConnectionString = builder.Configuration.GetValue<string>("ConnectionStrings:Sql");
+var secretKey = builder.Configuration.GetValue<string>("AppSettingsConfiguration:SecretKey");
+
+builder.Services.AddSingleton<AppSettingsConfiguration>(builder.Configuration.GetSection("AppSettingsConfiguration").Get<AppSettingsConfiguration>());
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -72,7 +78,7 @@ builder.Services.AddHttpClient();
 
 #endregion
 
-var key = Encoding.ASCII.GetBytes("262db528-2080-4fb0-b15d-8a96764a33a7");  //appSettings.Secret
+var key = Encoding.ASCII.GetBytes(secretKey);
 builder.Services
     .AddAuthentication(x =>
     {
@@ -81,21 +87,6 @@ builder.Services
     })
      .AddJwtBearer(x =>
      {
-         x.Events = new JwtBearerEvents
-         {
-             //OnTokenValidated = context =>
-             //{
-             //    //var userRepository = context.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
-             //    //var userId = context.Principal.Identity.Name;
-             //    //var user = userRepository.GetByIdAsync(new Guid(userId));
-             //    //if (user == null)
-             //    //{
-             //    //    // return unauthorized if user no longer exists
-             //    //    context.Fail("Unauthorized");
-             //    //}
-             //    return Task.CompletedTask;
-             //}
-         };
          x.RequireHttpsMetadata = false;
          x.SaveToken = true;
          x.TokenValidationParameters = new TokenValidationParameters
@@ -107,15 +98,10 @@ builder.Services
          };
      });
 
-var connectionString = builder.Configuration.GetConnectionString(@"Data Source=DESKTOP-M9CNHCN\SQLEXPRESS;Initial Catalog=freeDictionaryApi;Integrated Security=True");
-// sqlConnectionString
-
-
-builder.Services.AddDbContext<FreeDictionaryContext>(options => options.UseSqlServer(@"Data Source=DESKTOP-M9CNHCN\SQLEXPRESS;Initial Catalog=freeDictionaryApi;Integrated Security=True"));
+builder.Services.AddDbContext<FreeDictionaryContext>(options => options.UseSqlServer(sqlConnectionString));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

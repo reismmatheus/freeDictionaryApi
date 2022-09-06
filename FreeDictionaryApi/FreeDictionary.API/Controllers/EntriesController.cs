@@ -36,5 +36,28 @@ namespace FreeDictionary.API.Controllers
 
             return Ok(meaning);
         }
+
+        [HttpPost("{language}/{word}/favorite")]
+        public async Task<IActionResult> AddFavorite(string language, string word)
+        {
+            var userId = User.Identity.GetUserId();
+
+            var addFavorite = await _entriesBusiness.AddFavoriteAsync(userId, word);
+
+            if (!addFavorite)
+                return BadRequest();
+
+            return NoContent();
+        }
+
+        [HttpPost("{language}/{word}/unfavorite")]
+        public async Task<IActionResult> RemoveFavorite(string language, string word)
+        {
+            var userId = User.Identity.GetUserId();
+
+            await _entriesBusiness.RemoveFavoriteAsync(userId, word);
+
+            return NoContent();
+        }
     }
 }

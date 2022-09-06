@@ -9,5 +9,6 @@ namespace FreeDictionary.Data.Interface
 {
     public interface IFavoriteWordRepository : IRepository<FavoriteWord>
     {
+        Task DeleteAsync(string userId, string word);
     }
 }

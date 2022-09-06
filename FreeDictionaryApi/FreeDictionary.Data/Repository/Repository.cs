@@ -26,11 +26,11 @@ namespace FreeDictionary.Data.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(Guid id)
+        public virtual async Task DeleteAsync(Guid id)
         {
-            //var entity = await GetByIdAsync(id);
-            //entity.IsDeleted = true;
-            //await _context.SaveChangesAsync();
+            var entity = await GetByIdAsync(id);
+            entity.IsDeleted = true;
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IList<TEntity>> GetAllAsync()

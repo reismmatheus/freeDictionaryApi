@@ -2,6 +2,7 @@
 using FreeDictionary.Application.Model;
 using FreeDictionary.Data.Interface;
 using FreeDictionary.Domain;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -18,8 +19,9 @@ namespace FreeDictionary.Application.Business
     {
         private readonly IUserRepository _userRepository;
         private readonly string _secretKey = "262db528-2080-4fb0-b15d-8a96764a33a7";
-        public AuthBusiness(IUserRepository userRepository)
+        public AuthBusiness(IUserRepository userRepository, IOptions<AppSettingsConfiguration> secretKey)
         {
+            // _secretKey = secretKey.Value.SecretKey;
             _userRepository = userRepository;
         }
         public async Task<SinginResponse?> Singin(SinginModel model)
