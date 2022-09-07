@@ -1,3 +1,4 @@
+using FreeDictionary.API.Exceptions;
 using FreeDictionary.Application.Business;
 using FreeDictionary.Application.Interface;
 using FreeDictionary.Application.Model;
@@ -7,6 +8,7 @@ using FreeDictionary.Data.Repository;
 using FreeDictionary.Domain;
 using FreeDictionary.Service.FreeDictionaryApi;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
@@ -107,6 +109,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.ConfigureExceptionHandler();
 
 app.UseHttpsRedirection();
 
