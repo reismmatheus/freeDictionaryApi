@@ -26,6 +26,7 @@ namespace FreeDictionary.API.Controllers
 
             return NoContent();
         }
+
         [HttpGet("{language}")]
         public async Task<IActionResult> Get(string language, string search, int page = 1, int limit = 10)
         {

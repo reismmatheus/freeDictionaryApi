@@ -12,5 +12,6 @@ namespace FreeDictionary.Data.Interface
         Task AddRangeAsync(List<Word> words);
         Task TruncateTableAsync();
         Task<IList<Word>> GetBySearchAsync(string search, int page, int limit);
+        Task<int> GetTotalBySearchAsync(string search);
     }
 }

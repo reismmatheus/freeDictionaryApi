@@ -37,5 +37,14 @@ namespace FreeDictionary.Data.Repository
 
             return query.ToList();
         }
+
+        public async Task<int> GetTotalBySearchAsync(string search)
+        {
+            var query = (from w in _context.Words
+                         where w.Name.Contains(search)
+                         select w);
+
+            return query.Count();
+        }
     }
 }
