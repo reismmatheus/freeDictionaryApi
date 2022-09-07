@@ -22,7 +22,9 @@ var builder = WebApplication.CreateBuilder(args);
 var sqlConnectionString = builder.Configuration.GetValue<string>("ConnectionStrings:Sql");
 var secretKey = builder.Configuration.GetValue<string>("AppSettingsConfiguration:SecretKey");
 
-builder.Services.AddSingleton<AppSettingsConfiguration>(builder.Configuration.GetSection("AppSettingsConfiguration").Get<AppSettingsConfiguration>());
+builder.Services.Configure<AppSettingsConfiguration>(builder.Configuration.GetSection("AppSettingsConfiguration"));
+
+//builder.Services.AddSingleton<AppSettingsConfiguration>(builder.Configuration.GetSection("AppSettingsConfiguration").Get<AppSettingsConfiguration>());
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

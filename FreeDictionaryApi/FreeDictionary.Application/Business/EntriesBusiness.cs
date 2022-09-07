@@ -3,6 +3,7 @@ using FreeDictionary.Application.Model;
 using FreeDictionary.Data.Interface;
 using FreeDictionary.Domain;
 using FreeDictionary.Service.FreeDictionaryApi;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,17 +18,24 @@ namespace FreeDictionary.Application.Business
         private readonly IHistoryWordRepository _historyWordRepository;
         private readonly IWordRepository _wordRepository;
         private readonly IFreeDictionaryApiClient _freeDictionaryApiClient;
-        public EntriesBusiness(IFavoriteWordRepository favoriteWordRepository, IHistoryWordRepository historyWordRepository, IWordRepository wordRepository, IFreeDictionaryApiClient freeDictionaryApiClient)
+        private readonly AppSettingsConfiguration _appSettingsConfiguration;
+        public EntriesBusiness(
+            IFavoriteWordRepository favoriteWordRepository, 
+            IHistoryWordRepository historyWordRepository, 
+            IWordRepository wordRepository, 
+            IFreeDictionaryApiClient freeDictionaryApiClient,
+            IOptions<AppSettingsConfiguration> appSettingsConfiguration)
         {
             _favoriteWordRepository = favoriteWordRepository;
             _historyWordRepository = historyWordRepository;
             _wordRepository = wordRepository;
             _freeDictionaryApiClient = freeDictionaryApiClient;
+            _appSettingsConfiguration = appSettingsConfiguration.Value;
         }
 
         public async Task<bool> DownloadWordsAsync()
         {
-            var words = await _freeDictionaryApiClient.DownloadWords();
+            var words = await _freeDictionaryApiClient.DownloadWordsAsync(_appSettingsConfiguration.FileWordsUrl);
             if (words == null || words.Count == 0)
                 return false;
 
@@ -60,7 +68,7 @@ namespace FreeDictionary.Application.Business
         public async Task<object?> GetByWordAsync(string userId, string word)
         {
             await _historyWordRepository.AddAsync(new HistoryWord { Word = word, UserId = new Guid(userId) });
-            var wordResult = await _freeDictionaryApiClient.GetWord(word);
+            var wordResult = await _freeDictionaryApiClient.GetWordAsync(_appSettingsConfiguration.FreeDictionaryApiUrl, word);
             return wordResult;
         }
         public async Task<bool> AddFavoriteAsync(string userId, string word)

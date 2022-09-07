@@ -18,10 +18,10 @@ namespace FreeDictionary.Application.Business
     public class AuthBusiness : IAuthBusiness
     {
         private readonly IUserRepository _userRepository;
-        private readonly string _secretKey = "262db528-2080-4fb0-b15d-8a96764a33a7";
-        public AuthBusiness(IUserRepository userRepository, IOptions<AppSettingsConfiguration> secretKey)
+        private readonly AppSettingsConfiguration _appSettingsConfiguration;
+        public AuthBusiness(IUserRepository userRepository, IOptions<AppSettingsConfiguration> appSettingsConfiguration)
         {
-            // _secretKey = secretKey.Value.SecretKey;
+            _appSettingsConfiguration = appSettingsConfiguration.Value;
             _userRepository = userRepository;
         }
         public async Task<SinginResponse?> Singin(SinginModel model)
@@ -59,7 +59,7 @@ namespace FreeDictionary.Application.Business
         private string CreateToken(Guid id, string email, string name)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_secretKey);  //_appSettings.Secret
+            var key = Encoding.ASCII.GetBytes(_appSettingsConfiguration.SecretKey);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]

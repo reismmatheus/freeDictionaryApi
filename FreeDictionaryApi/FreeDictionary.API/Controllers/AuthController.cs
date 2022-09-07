@@ -1,6 +1,8 @@
 ﻿using FreeDictionary.Application.Interface;
+using FreeDictionary.Application.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using static FreeDictionary.Application.Model.AuthModel;
 
 namespace FreeDictionary.API.Controllers
@@ -9,10 +11,12 @@ namespace FreeDictionary.API.Controllers
     [Route("[controller]")]
     public class AuthController : Controller
     {
+        private readonly AppSettingsConfiguration _appSettingsConfiguration;
         private readonly IAuthBusiness _authBusiness;
-        public AuthController(IAuthBusiness authBusiness)
+        public AuthController(IAuthBusiness authBusiness, IOptions<AppSettingsConfiguration> appSettingsConfiguration)
         {
             _authBusiness = authBusiness;
+            _appSettingsConfiguration = appSettingsConfiguration.Value;
         }
 
         [HttpPost("Singup")]

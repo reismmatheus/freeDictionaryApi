@@ -9,5 +9,7 @@ namespace FreeDictionary.Application.Model
     public class AppSettingsConfiguration
     {
         public string SecretKey { get; set; }
+        public string FreeDictionaryApiUrl { get; set; }
+        public string FileWordsUrl { get; set; }
     }
 }
