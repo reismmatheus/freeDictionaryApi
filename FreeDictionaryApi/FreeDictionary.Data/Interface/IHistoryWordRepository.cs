@@ -9,5 +9,7 @@ namespace FreeDictionary.Data.Interface
 {
     public interface IHistoryWordRepository : IRepository<HistoryWord>
     {
+        Task<IList<HistoryWord>> GetByUserIdAsync(string userId, int page, int limit);
+        Task<int> GetTotalByUserIdAsync(string userId);
     }
 }

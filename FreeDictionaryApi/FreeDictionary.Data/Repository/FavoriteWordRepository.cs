@@ -28,5 +28,23 @@ namespace FreeDictionary.Data.Repository
             _context.FavoriteWords.Remove(entity);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<IList<FavoriteWord>> GetByUserIdAsync(string userId, int page, int limit)
+        {
+            var query = (from f in _context.FavoriteWords
+                         where f.UserId == new Guid(userId)
+                         select f).Skip(page).Take(limit);
+
+            return query.ToList();
+        }
+
+        public async Task<int> GetTotalByUserIdAsync(string userId)
+        {
+            var query = (from f in _context.FavoriteWords
+                         where f.UserId == new Guid(userId)
+                         select f);
+
+            return query.Count();
+        }
     }
 }

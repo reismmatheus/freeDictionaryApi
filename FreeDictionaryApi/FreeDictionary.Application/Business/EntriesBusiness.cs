@@ -42,12 +42,12 @@ namespace FreeDictionary.Application.Business
 
             return true;
         }
-        public async Task<EntriesWordModel> GetAsync(string search, int page = 1, int limit = 10)
+        public async Task<PaginationModel<string>> GetAsync(string search, int page = 1, int limit = 10)
         {
             var words = await _wordRepository.GetBySearchAsync(search, page, limit);
             var totalDocs = await _wordRepository.GetTotalBySearchAsync(search);
             var totalPages = totalDocs / limit + (totalDocs % limit > 0 ? 1 : 0);
-            return new EntriesWordModel
+            return new PaginationModel<string>
             {
                 Results = words.Select(x => x.Name).ToList(),
                 TotalDocs = totalDocs,
@@ -55,7 +55,7 @@ namespace FreeDictionary.Application.Business
                 TotalPages = totalPages,
                 HasNext = page < totalPages,
                 HasPrev = page > 1 && page <= totalPages
-            }; ;
+            };
         }
         public async Task<object?> GetByWordAsync(string userId, string word)
         {

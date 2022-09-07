@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace FreeDictionary.Application.Model
 {
-    public class EntriesWordModel
+    public class PaginationModel<T>
     {
-        public List<string> Results { get; set; }
+        public List<T> Results { get; set; }
         public int TotalDocs { get; set; }
         public int Page { get; set; }
         public int TotalPages { get; set; }

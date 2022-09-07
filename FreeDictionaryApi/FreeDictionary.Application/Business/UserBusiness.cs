@@ -1,6 +1,7 @@
 ﻿using FreeDictionary.Application.Interface;
 using FreeDictionary.Application.Model;
 using FreeDictionary.Data.Interface;
+using FreeDictionary.Data.Repository;
 using FreeDictionary.Domain;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNetCore.Http;
@@ -12,7 +13,6 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using static FreeDictionary.Application.Model.UserModel;
 
 namespace FreeDictionary.Application.Business
 {
@@ -27,38 +27,50 @@ namespace FreeDictionary.Application.Business
             _historyWordRepository = historyWordRepository;
             _userRepository = userRepository;
         }
-        public async Task<UserMeModel> GetProfile(string userId)
+
+        public async Task<UserModel> GetProfileAsync(string userId)
         {
             var user = await _userRepository.GetByIdAsync(new Guid(userId));
-            return new UserMeModel
+            return new UserModel
             {
                 Id = user.Id,
                 Email = user.Email,
                 Name = user.Name
             };
         }
-        public async Task<IList<UserWordAdded>> GetFavorities(string userId)
-        {
-            var favorities = await _favoriteWordRepository.GetItemAsync(x => x.UserId == new Guid(userId));
-            var result = new List<UserWordAdded>();
-            foreach (var item in favorities)
-            {
-                result.Add(new UserWordAdded { Added = item.CreatedIn, Word = item.Word });
-            }
 
-            return result;
+        public async Task<PaginationModel<UserWordAddedModel>> GetFavoritiesAsync(string userId, int page = 1, int limit = 10)
+        {
+            var favorities = await _favoriteWordRepository.GetByUserIdAsync(userId, page, limit);
+            var totalDocs = await _favoriteWordRepository.GetTotalByUserIdAsync(userId);
+            var totalPages = totalDocs / limit + (totalDocs % limit > 0 ? 1 : 0);
+
+            return new PaginationModel<UserWordAddedModel>
+            {
+                Results = favorities.Select(x => new UserWordAddedModel { Added = x.CreatedIn, Word = x.Word }).ToList(),
+                TotalDocs = totalDocs,
+                Page = page,
+                TotalPages = totalPages,
+                HasNext = page < totalPages,
+                HasPrev = page > 1 && page <= totalPages
+            };
         }
 
-        public async Task<IList<UserWordAdded>> GetHistory(string userId)
+        public async Task<PaginationModel<UserWordAddedModel>> GetHistoryAsync(string userId, int page = 1, int limit = 10)
         {
-            var histories = await _historyWordRepository.GetItemAsync(x => x.UserId == new Guid(userId));
-            var result = new List<UserWordAdded>();
-            foreach (var item in histories)
-            {
-                result.Add(new UserWordAdded { Added = item.CreatedIn, Word = item.Word });
-            }
+            var histories = await _historyWordRepository.GetByUserIdAsync(userId, page, limit);
+            var totalDocs = await _historyWordRepository.GetTotalByUserIdAsync(userId);
+            var totalPages = totalDocs / limit + (totalDocs % limit > 0 ? 1 : 0);
 
-            return result;
+            return new PaginationModel<UserWordAddedModel>
+            {
+                Results = histories.Select(x => new UserWordAddedModel { Added = x.CreatedIn, Word = x.Word }).ToList(),
+                TotalDocs = totalDocs,
+                Page = page,
+                TotalPages = totalPages,
+                HasNext = page < totalPages,
+                HasPrev = page > 1 && page <= totalPages
+            };
         }
     }
 }
