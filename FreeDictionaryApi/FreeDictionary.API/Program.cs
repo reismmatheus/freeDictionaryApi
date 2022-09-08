@@ -7,10 +7,12 @@ using FreeDictionary.Data.Interface;
 using FreeDictionary.Data.Repository;
 using FreeDictionary.Domain;
 using FreeDictionary.Service.FreeDictionaryApi;
+using FreeDictionary.Service.RedisCache;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -24,9 +26,11 @@ var secretKey = builder.Configuration.GetValue<string>("AppSettingsConfiguration
 
 builder.Services.Configure<AppSettingsConfiguration>(builder.Configuration.GetSection("AppSettingsConfiguration"));
 
-//builder.Services.AddSingleton<AppSettingsConfiguration>(builder.Configuration.GetSection("AppSettingsConfiguration").Get<AppSettingsConfiguration>());
+builder.Services.AddStackExchangeRedisCache(options => { options.Configuration = "localhost:6379"; });
+builder.Services.AddTransient<IRedisCacheClient, RedisCacheClient>();
 
 builder.Services.AddControllers();
+builder.Services.AddDistributedMemoryCache();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

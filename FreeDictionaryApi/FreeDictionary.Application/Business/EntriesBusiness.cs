@@ -3,10 +3,14 @@ using FreeDictionary.Application.Model;
 using FreeDictionary.Data.Interface;
 using FreeDictionary.Domain;
 using FreeDictionary.Service.FreeDictionaryApi;
+using FreeDictionary.Service.RedisCache;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,18 +23,21 @@ namespace FreeDictionary.Application.Business
         private readonly IWordRepository _wordRepository;
         private readonly IFreeDictionaryApiClient _freeDictionaryApiClient;
         private readonly AppSettingsConfiguration _appSettingsConfiguration;
+        private readonly IRedisCacheClient _redisCacheClient;
         public EntriesBusiness(
             IFavoriteWordRepository favoriteWordRepository, 
             IHistoryWordRepository historyWordRepository, 
             IWordRepository wordRepository, 
             IFreeDictionaryApiClient freeDictionaryApiClient,
-            IOptions<AppSettingsConfiguration> appSettingsConfiguration)
+            IOptions<AppSettingsConfiguration> appSettingsConfiguration,
+            IRedisCacheClient redisCacheClient)
         {
             _favoriteWordRepository = favoriteWordRepository;
             _historyWordRepository = historyWordRepository;
             _wordRepository = wordRepository;
             _freeDictionaryApiClient = freeDictionaryApiClient;
             _appSettingsConfiguration = appSettingsConfiguration.Value;
+            _redisCacheClient = redisCacheClient;
         }
 
         public async Task<bool> DownloadWordsAsync()
@@ -52,10 +59,18 @@ namespace FreeDictionary.Application.Business
         }
         public async Task<PaginationModel<string>> GetAsync(string search, int page = 1, int limit = 10)
         {
+            if (page <= 0) page = 1;
+            if (limit <= 0) limit = 10;
+
+            var cache = await _redisCacheClient.GetAsync<PaginationModel<string>>($"{nameof(GetAsync)}::search={search}::page={page}::limit={limit}");
+
+            if (cache != null)
+                return cache;
+
             var words = await _wordRepository.GetBySearchAsync(search, page, limit);
             var totalDocs = await _wordRepository.GetTotalBySearchAsync(search);
             var totalPages = totalDocs / limit + (totalDocs % limit > 0 ? 1 : 0);
-            return new PaginationModel<string>
+            var result = new PaginationModel<string>
             {
                 Results = words.Select(x => x.Name).ToList(),
                 TotalDocs = totalDocs,
@@ -64,12 +79,20 @@ namespace FreeDictionary.Application.Business
                 HasNext = page < totalPages,
                 HasPrev = page > 1 && page <= totalPages
             };
+            await _redisCacheClient.SetAsync($"{nameof(GetAsync)}::search={search}::page={page}::limit={limit}", result, true);
+            return result;
         }
         public async Task<object?> GetByWordAsync(string userId, string word)
         {
             await _historyWordRepository.AddAsync(new HistoryWord { Word = word, UserId = new Guid(userId) });
-            var wordResult = await _freeDictionaryApiClient.GetWordAsync(_appSettingsConfiguration.FreeDictionaryApiUrl, word);
-            return wordResult;
+            var cache = await _redisCacheClient.GetAsync<object>($"{nameof(GetByWordAsync)}::{word}");
+
+            if (cache != null)
+                return cache;
+
+            var result = await _freeDictionaryApiClient.GetWordAsync(_appSettingsConfiguration.FreeDictionaryApiUrl, word);
+            await _redisCacheClient.SetAsync($"{nameof(GetByWordAsync)}::{word}", result);
+            return result;
         }
         public async Task<bool> AddFavoriteAsync(string userId, string word)
         {
