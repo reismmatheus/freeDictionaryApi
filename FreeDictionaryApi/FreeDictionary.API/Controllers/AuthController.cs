@@ -11,12 +11,10 @@ namespace FreeDictionary.API.Controllers
     [Route("[controller]")]
     public class AuthController : Controller
     {
-        private readonly AppSettingsConfiguration _appSettingsConfiguration;
         private readonly IAuthBusiness _authBusiness;
-        public AuthController(IAuthBusiness authBusiness, IOptions<AppSettingsConfiguration> appSettingsConfiguration)
+        public AuthController(IAuthBusiness authBusiness)
         {
             _authBusiness = authBusiness;
-            _appSettingsConfiguration = appSettingsConfiguration.Value;
         }
 
         [HttpPost("Singup")]
