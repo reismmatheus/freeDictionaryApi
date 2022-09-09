@@ -12,6 +12,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using static FreeDictionary.Application.Model.AuthModel;
+using static FreeDictionary.CrossCutting.Extensions.TokenExtensions;
 
 namespace FreeDictionary.Application.Business
 {
@@ -31,7 +32,7 @@ namespace FreeDictionary.Application.Business
             if (user == null)
                 return null;
 
-            var token = CreateToken(user.Id, user.Email, user.Name);
+            var token = CreateToken(user.Id, user.Email, user.Name, _appSettingsConfiguration.SecretKey);
             return new SinginResponse
             {
                 Id = user.Id,
@@ -47,33 +48,13 @@ namespace FreeDictionary.Application.Business
             if (user == null)
                 return null;
 
-            var token = CreateToken(user.Id, user.Email, user.Name);
+            var token = CreateToken(user.Id, user.Email, user.Name, _appSettingsConfiguration.SecretKey);
             return new SingupResponse
             {
                 Id = user.Id,
                 Name = user.Name,
                 Token = token
             };
-        }
-
-        private string CreateToken(Guid id, string email, string name)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettingsConfiguration.SecretKey);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, id.ToString()),
-                    new Claim(ClaimTypes.Email, email),
-                    new Claim(ClaimTypes.Name, name)
-                }),
-                Expires = DateTime.UtcNow.AddHours(8),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var result = tokenHandler.WriteToken(token);
-            return result;
         }
     }
 }
