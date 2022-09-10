@@ -39,7 +39,7 @@ namespace FreeDictionary.Application.Business
             };
         }
 
-        public async Task<PaginationModel<UserWordAddedModel>> GetFavoritiesAsync(string userId, int page = 1, int limit = 10)
+        public async Task<PaginationModel<UserWordAddedModel>> GetFavoritesAsync(string userId, int page = 1, int limit = 10)
         {
             var favorities = await _favoriteWordRepository.GetByUserIdAsync(userId, page, limit);
             var totalDocs = await _favoriteWordRepository.GetTotalByUserIdAsync(userId);

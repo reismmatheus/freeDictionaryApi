@@ -31,11 +31,11 @@ namespace FreeDictionary.API.Controllers
             return Ok(history);
         }
 
-        [HttpGet("Me/Favorities")]
-        public async Task<IActionResult> GetFavorities(int page = 1, int limit = 10)
+        [HttpGet("Me/Favorites")]
+        public async Task<IActionResult> GetFavorites(int page = 1, int limit = 10)
         {
             var userId = User.Identity.GetUserId();
-            var favorities = await _userBusiness.GetFavoritiesAsync(userId, page, limit);
+            var favorities = await _userBusiness.GetFavoritesAsync(userId, page, limit);
             return Ok(favorities);
         }
     }

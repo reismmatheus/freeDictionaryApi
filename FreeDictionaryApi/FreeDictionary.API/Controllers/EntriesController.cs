@@ -57,7 +57,7 @@ namespace FreeDictionary.API.Controllers
             return NoContent();
         }
 
-        [HttpPost("{language}/{word}/unfavorite")]
+        [HttpDelete("{language}/{word}/unfavorite")]
         public async Task<IActionResult> RemoveFavorite(string language, string word)
         {
             var userId = User.Identity.GetUserId();

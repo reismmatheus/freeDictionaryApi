@@ -45,7 +45,9 @@ namespace FreeDictionary.Data.Repository
                 Name = name,
                 Email = email,
                 PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt
+                PasswordSalt = passwordSalt,
+                CreatedIn = DateTime.UtcNow,
+                Active = true
             };
 
             await _context.AddAsync(user);

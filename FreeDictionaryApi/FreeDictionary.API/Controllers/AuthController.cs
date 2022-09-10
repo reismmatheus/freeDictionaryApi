@@ -36,6 +36,7 @@ namespace FreeDictionary.API.Controllers
             if(result == null)
                 return Unauthorized();
 
+            var xx = Ok(result);
             return Ok(result);
         }
     }
