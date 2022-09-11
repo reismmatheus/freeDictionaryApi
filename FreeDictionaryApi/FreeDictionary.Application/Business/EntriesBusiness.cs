@@ -1,4 +1,5 @@
-﻿using FreeDictionary.Application.Interface;
+﻿using FreeDictionary.Application.Configuration;
+using FreeDictionary.Application.Interface;
 using FreeDictionary.Application.Model;
 using FreeDictionary.Data.Interface;
 using FreeDictionary.Domain;
@@ -40,11 +41,11 @@ namespace FreeDictionary.Application.Business
             _redisCacheClient = redisCacheClient;
         }
 
-        public async Task<bool> DownloadWordsAsync()
+        public async Task<(bool, bool)> DownloadWordsAsync()
         {
             var words = await _freeDictionaryApiClient.DownloadWordsAsync(_appSettingsConfiguration.FileWordsUrl);
             if (words == null || words.Count == 0)
-                return false;
+                return (false, false);
 
             var wordsList = new List<Word>();
             foreach (var item in words)
@@ -55,17 +56,16 @@ namespace FreeDictionary.Application.Business
             await _wordRepository.TruncateTableAsync();
             await _wordRepository.AddRangeAsync(wordsList);
 
-            return true;
+            return (true, false);
         }
-        public async Task<PaginationModel<string>> GetAsync(string search, int page = 1, int limit = 10)
+        public async Task<(PaginationModel<string>, bool)> GetAsync(string search, int page = 1, int limit = 10)
         {
             if (page <= 0) page = 1;
             if (limit <= 0) limit = 10;
 
             var cache = await _redisCacheClient.GetAsync<PaginationModel<string>>($"{nameof(GetAsync)}::search={search}::page={page}::limit={limit}");
 
-            if (cache != null)
-                return cache;
+            if (cache != null) return (cache, true);
 
             var words = await _wordRepository.GetBySearchAsync(search, page, limit);
             var totalDocs = await _wordRepository.GetTotalBySearchAsync(search);
@@ -80,33 +80,32 @@ namespace FreeDictionary.Application.Business
                 HasPrev = page > 1 && page <= totalPages
             };
             await _redisCacheClient.SetAsync($"{nameof(GetAsync)}::search={search}::page={page}::limit={limit}", result, true);
-            return result;
+            return (result, false);
         }
-        public async Task<object?> GetByWordAsync(string userId, string word)
+        public async Task<(object?, bool)> GetByWordAsync(string userId, string word)
         {
             await _historyWordRepository.AddAsync(new HistoryWord { Word = word, UserId = new Guid(userId) });
             var cache = await _redisCacheClient.GetAsync<object>($"{nameof(GetByWordAsync)}::{word}");
 
-            if (cache != null)
-                return cache;
+            if (cache != null) return (cache, true);
 
             var result = await _freeDictionaryApiClient.GetWordAsync(_appSettingsConfiguration.FreeDictionaryApiUrl, word);
             await _redisCacheClient.SetAsync($"{nameof(GetByWordAsync)}::{word}", result);
-            return result;
+            return (result, false);
         }
-        public async Task<bool> AddFavoriteAsync(string userId, string word)
+        public async Task<(bool, bool)> AddFavoriteAsync(string userId, string word)
         {
             var favoriteWord = await _favoriteWordRepository.GetItemAsync(x => x.UserId == new Guid(userId) && x.Word == word);
 
-            if (favoriteWord == null || favoriteWord.Count > 0)
-                return false;
+            if (favoriteWord == null || favoriteWord.Count > 0) return (false, false);
 
             await _favoriteWordRepository.AddAsync(new FavoriteWord
             {
                 Word = word,
                 UserId = new Guid(userId)
             });
-            return true;
+
+            return (true, false);
         }
         public async Task RemoveFavoriteAsync(string userId, string word)
         {

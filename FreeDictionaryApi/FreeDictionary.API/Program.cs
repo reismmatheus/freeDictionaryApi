@@ -1,7 +1,7 @@
 using FreeDictionary.API.Exceptions;
 using FreeDictionary.Application.Business;
+using FreeDictionary.Application.Configuration;
 using FreeDictionary.Application.Interface;
-using FreeDictionary.Application.Model;
 using FreeDictionary.CrossCutting.Middlewares;
 using FreeDictionary.Data.Context;
 using FreeDictionary.Data.Interface;

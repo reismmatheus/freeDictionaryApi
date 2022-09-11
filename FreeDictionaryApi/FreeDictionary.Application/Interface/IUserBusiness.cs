@@ -4,8 +4,8 @@ namespace FreeDictionary.Application.Interface
 {
     public interface IUserBusiness
     {
-        Task<UserModel> GetProfileAsync(string userId);
-        Task<PaginationModel<UserWordAddedModel>> GetHistoryAsync(string userId, int page, int limit);
-        Task<PaginationModel<UserWordAddedModel>> GetFavoritesAsync(string userId, int page, int limit);
+        Task<(UserModel, bool)> GetProfileAsync(string userId);
+        Task<(PaginationModel<UserWordAddedModel>, bool)> GetHistoryAsync(string userId, int page, int limit);
+        Task<(PaginationModel<UserWordAddedModel>, bool)> GetFavoritesAsync(string userId, int page, int limit);
     }
 }

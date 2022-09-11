@@ -28,24 +28,24 @@ namespace FreeDictionary.Application.Business
             _userRepository = userRepository;
         }
 
-        public async Task<UserModel> GetProfileAsync(string userId)
+        public async Task<(UserModel, bool)> GetProfileAsync(string userId)
         {
             var user = await _userRepository.GetByIdAsync(new Guid(userId));
-            return new UserModel
+            return (new UserModel
             {
                 Id = user.Id,
                 Email = user.Email,
                 Name = user.Name
-            };
+            }, false);
         }
 
-        public async Task<PaginationModel<UserWordAddedModel>> GetFavoritesAsync(string userId, int page = 1, int limit = 10)
+        public async Task<(PaginationModel<UserWordAddedModel>, bool)> GetFavoritesAsync(string userId, int page = 1, int limit = 10)
         {
             var favorities = await _favoriteWordRepository.GetByUserIdAsync(userId, page, limit);
             var totalDocs = await _favoriteWordRepository.GetTotalByUserIdAsync(userId);
             var totalPages = totalDocs / limit + (totalDocs % limit > 0 ? 1 : 0);
 
-            return new PaginationModel<UserWordAddedModel>
+            return (new PaginationModel<UserWordAddedModel>
             {
                 Results = favorities.Select(x => new UserWordAddedModel { Added = x.CreatedIn, Word = x.Word }).ToList(),
                 TotalDocs = totalDocs,
@@ -53,16 +53,16 @@ namespace FreeDictionary.Application.Business
                 TotalPages = totalPages,
                 HasNext = page < totalPages,
                 HasPrev = page > 1 && page <= totalPages
-            };
+            }, false);
         }
 
-        public async Task<PaginationModel<UserWordAddedModel>> GetHistoryAsync(string userId, int page = 1, int limit = 10)
+        public async Task<(PaginationModel<UserWordAddedModel>, bool)> GetHistoryAsync(string userId, int page = 1, int limit = 10)
         {
             var histories = await _historyWordRepository.GetByUserIdAsync(userId, page, limit);
             var totalDocs = await _historyWordRepository.GetTotalByUserIdAsync(userId);
             var totalPages = totalDocs / limit + (totalDocs % limit > 0 ? 1 : 0);
 
-            return new PaginationModel<UserWordAddedModel>
+            return (new PaginationModel<UserWordAddedModel>
             {
                 Results = histories.Select(x => new UserWordAddedModel { Added = x.CreatedIn, Word = x.Word }).ToList(),
                 TotalDocs = totalDocs,
@@ -70,7 +70,7 @@ namespace FreeDictionary.Application.Business
                 TotalPages = totalPages,
                 HasNext = page < totalPages,
                 HasPrev = page > 1 && page <= totalPages
-            };
+            }, false);
         }
     }
 }

@@ -10,10 +10,10 @@ namespace FreeDictionary.Application.Interface
 {
     public interface IEntriesBusiness
     {
-        Task<PaginationModel<string>> GetAsync(string search, int page, int limit);
-        Task<object?> GetByWordAsync(string userId, string word);
-        Task<bool> DownloadWordsAsync();
-        Task<bool> AddFavoriteAsync(string userId, string word);
+        Task<(PaginationModel<string>, bool)> GetAsync(string search, int page, int limit);
+        Task<(object?, bool)> GetByWordAsync(string userId, string word);
+        Task<(bool, bool)> DownloadWordsAsync();
+        Task<(bool, bool)> AddFavoriteAsync(string userId, string word);
         Task RemoveFavoriteAsync(string userId, string word);
     }
 }

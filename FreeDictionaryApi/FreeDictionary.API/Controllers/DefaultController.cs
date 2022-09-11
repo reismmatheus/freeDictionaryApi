@@ -16,6 +16,7 @@ namespace FreeDictionary.API.Controllers
         {
             var watcher = Stopwatch.StartNew();
             watcher.Stop();
+            HttpContext.Response.Headers.Add("x-cache", "MISS");
             HttpContext.Response.Headers.Add("x-response-time", watcher.ElapsedMilliseconds.ToString());
             return Ok(new { message = "Fullstack Challenge 🏅 - Dictionary" });
         }

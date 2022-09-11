@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FreeDictionary.Application.Model
+namespace FreeDictionary.Application.Configuration
 {
     public class AppSettingsConfiguration
     {

@@ -23,8 +23,9 @@ namespace FreeDictionary.API.Controllers
         public async Task<IActionResult> Singup(SingupModel model)
         {
             var watcher = Stopwatch.StartNew();
-            var result = await _authBusiness.Singup(model);
+            var (result, cache) = await _authBusiness.Singup(model);
             watcher.Stop();
+            HttpContext.Response.Headers.Add("x-cache", cache ? "HIT" : "MISS");
             HttpContext.Response.Headers.Add("x-response-time", watcher.ElapsedMilliseconds.ToString());
 
             if (result == null)
@@ -37,8 +38,9 @@ namespace FreeDictionary.API.Controllers
         public async Task<IActionResult> Singin(SinginModel model)
         {
             var watcher = Stopwatch.StartNew();
-            var result = await _authBusiness.Singin(model);
+            var (result, cache) = await _authBusiness.Singin(model);
             watcher.Stop();
+            HttpContext.Response.Headers.Add("x-cache", cache ? "HIT" : "MISS");
             HttpContext.Response.Headers.Add("x-response-time", watcher.ElapsedMilliseconds.ToString());
 
             if (result == null)

@@ -22,13 +22,13 @@ namespace FreeDictionary.API.Controllers
         public async Task<IActionResult> GetProfile()
         {
             var watcher = Stopwatch.StartNew();
-
             var userId = User.Identity.GetUserId();
-            var profile = await _userBusiness.GetProfileAsync(userId);
-
+            var (result, cache) = await _userBusiness.GetProfileAsync(userId);
             watcher.Stop();
+            HttpContext.Response.Headers.Add("x-cache", cache ? "HIT" : "MISS");
             HttpContext.Response.Headers.Add("x-response-time", watcher.ElapsedMilliseconds.ToString());
-            return Ok(profile);
+
+            return Ok(result);
         }
 
         [HttpGet("Me/History")]
@@ -37,24 +37,25 @@ namespace FreeDictionary.API.Controllers
             var watcher = Stopwatch.StartNew();
 
             var userId = User.Identity.GetUserId();
-            var history = await _userBusiness.GetHistoryAsync(userId, page, limit);
+            var (result, cache) = await _userBusiness.GetHistoryAsync(userId, page, limit);
 
             watcher.Stop();
+            HttpContext.Response.Headers.Add("x-cache", cache ? "HIT" : "MISS");
             HttpContext.Response.Headers.Add("x-response-time", watcher.ElapsedMilliseconds.ToString());
-            return Ok(history);
+            return Ok(result);
         }
 
         [HttpGet("Me/Favorites")]
         public async Task<IActionResult> GetFavorites(int page = 1, int limit = 10)
         {
             var watcher = Stopwatch.StartNew();
-
             var userId = User.Identity.GetUserId();
-            var favorities = await _userBusiness.GetFavoritesAsync(userId, page, limit);
-
+            var (result, cache) = await _userBusiness.GetFavoritesAsync(userId, page, limit);
             watcher.Stop();
+            HttpContext.Response.Headers.Add("x-cache", cache ? "HIT" : "MISS");
             HttpContext.Response.Headers.Add("x-response-time", watcher.ElapsedMilliseconds.ToString());
-            return Ok(favorities);
+
+            return Ok(result);
         }
     }
 }

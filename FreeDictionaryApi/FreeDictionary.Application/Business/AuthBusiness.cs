@@ -1,5 +1,5 @@
-﻿using FreeDictionary.Application.Interface;
-using FreeDictionary.Application.Model;
+﻿using FreeDictionary.Application.Configuration;
+using FreeDictionary.Application.Interface;
 using FreeDictionary.Data.Interface;
 using FreeDictionary.Domain;
 using Microsoft.Extensions.Options;
@@ -25,36 +25,36 @@ namespace FreeDictionary.Application.Business
             _appSettingsConfiguration = appSettingsConfiguration.Value;
             _userRepository = userRepository;
         }
-        public async Task<SinginResponse?> Singin(SinginModel model)
+        public async Task<(SinginResponse?, bool)> Singin(SinginModel model)
         {
             var user = await _userRepository.AuthenticateAsync(model.Email, model.Password);
 
             if (user == null)
-                return null;
+                return (null, false);
 
             var token = CreateToken(user.Id, user.Email, user.Name, _appSettingsConfiguration.SecretKey);
-            return new SinginResponse
+            return (new SinginResponse
             {
                 Id = user.Id,
                 Name = user.Name,
                 Token = token
-            };
+            }, false);
         }
 
-        public async Task<SingupResponse?> Singup(SingupModel model)
+        public async Task<(SingupResponse?, bool)> Singup(SingupModel model)
         {
             var user = await _userRepository.AddAsync(model.Name, model.Email, model.Password);
 
             if (user == null)
-                return null;
+                return (null, false);
 
             var token = CreateToken(user.Id, user.Email, user.Name, _appSettingsConfiguration.SecretKey);
-            return new SingupResponse
+            return (new SingupResponse
             {
                 Id = user.Id,
                 Name = user.Name,
                 Token = token
-            };
+            }, false);
         }
     }
 }
