@@ -2,6 +2,7 @@ using FreeDictionary.API.Exceptions;
 using FreeDictionary.Application.Business;
 using FreeDictionary.Application.Interface;
 using FreeDictionary.Application.Model;
+using FreeDictionary.CrossCutting.Middlewares;
 using FreeDictionary.Data.Context;
 using FreeDictionary.Data.Interface;
 using FreeDictionary.Data.Repository;
@@ -17,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -125,6 +127,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseMiddleware<ResponseTimeMiddleware>();
 
 app.Run();
 

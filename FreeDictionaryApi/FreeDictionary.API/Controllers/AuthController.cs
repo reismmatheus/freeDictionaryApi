@@ -1,8 +1,10 @@
 ﻿using FreeDictionary.Application.Interface;
 using FreeDictionary.Application.Model;
+using FreeDictionary.CrossCutting.Middlewares;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Diagnostics;
 using static FreeDictionary.Application.Model.AuthModel;
 
 namespace FreeDictionary.API.Controllers
@@ -20,7 +22,10 @@ namespace FreeDictionary.API.Controllers
         [HttpPost("Singup")]
         public async Task<IActionResult> Singup(SingupModel model)
         {
+            var watcher = Stopwatch.StartNew();
             var result = await _authBusiness.Singup(model);
+            watcher.Stop();
+            HttpContext.Response.Headers.Add("x-response-time", watcher.ElapsedMilliseconds.ToString());
 
             if (result == null)
                 return BadRequest(new { message = "Error message" });
@@ -31,12 +36,14 @@ namespace FreeDictionary.API.Controllers
         [HttpPost("Singin")]
         public async Task<IActionResult> Singin(SinginModel model)
         {
+            var watcher = Stopwatch.StartNew();
             var result = await _authBusiness.Singin(model);
+            watcher.Stop();
+            HttpContext.Response.Headers.Add("x-response-time", watcher.ElapsedMilliseconds.ToString());
 
-            if(result == null)
+            if (result == null)
                 return Unauthorized();
 
-            var xx = Ok(result);
             return Ok(result);
         }
     }
