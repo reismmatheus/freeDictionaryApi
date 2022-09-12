@@ -33,7 +33,7 @@ namespace FreeDictionary.CrossCutting.Middlewares
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-            await context.Response.WriteAsync(JsonConvert.SerializeObject(new { message = "Error message" }));
+            await context.Response.WriteAsync(JsonConvert.SerializeObject(new { message = "Error message" })); 
         }
     }
 }

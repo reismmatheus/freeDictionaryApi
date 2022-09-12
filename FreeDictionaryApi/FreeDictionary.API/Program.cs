@@ -1,4 +1,3 @@
-using FreeDictionary.API.Exceptions;
 using FreeDictionary.Application.Business;
 using FreeDictionary.Application.Configuration;
 using FreeDictionary.Application.Interface;
@@ -117,8 +116,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.ConfigureExceptionHandler();
 
 app.UseHttpsRedirection();
 
