@@ -1,6 +1,8 @@
+using FreeDictionary.Application.AutoMapper;
 using FreeDictionary.Application.Business;
 using FreeDictionary.Application.Configuration;
 using FreeDictionary.Application.Interface;
+using FreeDictionary.Application.Model;
 using FreeDictionary.CrossCutting.Middlewares;
 using FreeDictionary.Data.Context;
 using FreeDictionary.Data.Interface;
@@ -84,6 +86,13 @@ typeof(UserBusiness)
 builder.Services.AddTransient<IFreeDictionaryApiClient, FreeDictionaryApiClient>();
 
 builder.Services.AddHttpClient();
+
+#endregion
+
+#region AutoMapper
+
+builder.Services.AddAutoMapper(typeof(AuthProfile));
+builder.Services.AddAutoMapper(typeof(UserProfile));
 
 #endregion
 

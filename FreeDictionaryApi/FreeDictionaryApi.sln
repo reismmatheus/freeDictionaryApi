@@ -13,9 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreeDictionary.Data", "Free
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreeDictionary.Service", "FreeDictionary.Service\FreeDictionary.Service.csproj", "{0CDAE4B4-6954-4E33-A700-569FB9F588B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeDictionary.CrossCutting", "FreeDictionary.CrossCutting\FreeDictionary.CrossCutting.csproj", "{E0207A14-049B-4FD3-A622-AE12FCB9DD1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreeDictionary.CrossCutting", "FreeDictionary.CrossCutting\FreeDictionary.CrossCutting.csproj", "{E0207A14-049B-4FD3-A622-AE12FCB9DD1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeDictionary.Tests", "FreeDictionary.Tests\FreeDictionary.Tests.csproj", "{61DF832A-3BE6-45A7-A479-9AB256E5DC35}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreeDictionary.Tests", "FreeDictionary.Tests\FreeDictionary.Tests.csproj", "{61DF832A-3BE6-45A7-A479-9AB256E5DC35}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

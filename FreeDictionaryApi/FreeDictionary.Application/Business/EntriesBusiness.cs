@@ -1,4 +1,5 @@
-﻿using FreeDictionary.Application.Configuration;
+﻿using AutoMapper;
+using FreeDictionary.Application.Configuration;
 using FreeDictionary.Application.Interface;
 using FreeDictionary.Application.Model;
 using FreeDictionary.Data.Interface;
@@ -19,6 +20,7 @@ namespace FreeDictionary.Application.Business
 {
     public class EntriesBusiness : IEntriesBusiness
     {
+        private readonly IMapper _mapper;
         private readonly IFavoriteWordRepository _favoriteWordRepository;
         private readonly IHistoryWordRepository _historyWordRepository;
         private readonly IWordRepository _wordRepository;
@@ -26,6 +28,7 @@ namespace FreeDictionary.Application.Business
         private readonly AppSettingsConfiguration _appSettingsConfiguration;
         private readonly IRedisCacheClient _redisCacheClient;
         public EntriesBusiness(
+            IMapper mapper,
             IFavoriteWordRepository favoriteWordRepository, 
             IHistoryWordRepository historyWordRepository, 
             IWordRepository wordRepository, 
@@ -33,6 +36,7 @@ namespace FreeDictionary.Application.Business
             IOptions<AppSettingsConfiguration> appSettingsConfiguration,
             IRedisCacheClient redisCacheClient)
         {
+            _mapper = mapper;
             _favoriteWordRepository = favoriteWordRepository;
             _historyWordRepository = historyWordRepository;
             _wordRepository = wordRepository;
@@ -68,18 +72,16 @@ namespace FreeDictionary.Application.Business
             if (cache != null) return (cache, true);
 
             var words = await _wordRepository.GetBySearchAsync(search, page, limit);
-            var totalDocs = await _wordRepository.GetTotalBySearchAsync(search);
-            var totalPages = totalDocs / limit + (totalDocs % limit > 0 ? 1 : 0);
-            var result = new PaginationModel<string>
-            {
-                Results = words.Select(x => x.Name).ToList(),
-                TotalDocs = totalDocs,
-                Page = page,
-                TotalPages = totalPages,
-                HasNext = page < totalPages,
-                HasPrev = page > 1 && page <= totalPages
-            };
+
+            var result = new PaginationModel<string>();
+            result.FormatPagination(
+                words.Select(x => x.Name).ToList(),
+                await _wordRepository.GetTotalBySearchAsync(search),
+                page,
+                limit);
+
             await _redisCacheClient.SetAsync($"{nameof(GetAsync)}::search={search}::page={page}::limit={limit}", result, true);
+
             return (result, false);
         }
         public async Task<(object?, bool)> GetByWordAsync(string userId, string word)
