@@ -25,11 +25,12 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 var sqlConnectionString = builder.Configuration.GetValue<string>("ConnectionStrings:Sql");
+var redisConnectionString = builder.Configuration.GetValue<string>("ConnectionStrings:Redis");
 var secretKey = builder.Configuration.GetValue<string>("AppSettingsConfiguration:SecretKey");
 
 builder.Services.Configure<AppSettingsConfiguration>(builder.Configuration.GetSection("AppSettingsConfiguration"));
 
-builder.Services.AddStackExchangeRedisCache(options => { options.Configuration = "localhost:6379"; });
+builder.Services.AddStackExchangeRedisCache(options => { options.Configuration = redisConnectionString; });
 builder.Services.AddTransient<IRedisCacheClient, RedisCacheClient>();
 
 builder.Services.AddControllers();
