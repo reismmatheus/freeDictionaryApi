@@ -19,12 +19,14 @@ Run in https://localhost:{port}
 
 ## Tech
 
-Dillinger uses a number of open source projects to work properly:
-
 - [.NET] - Framework BackEnd
 - [SQL Server] - Sql Database
 - [Swagger] - API development tool
 - [Redis] - Cache
+
+## Next Steps
+
+- Cursor Pagination
 
 ## Base
 
