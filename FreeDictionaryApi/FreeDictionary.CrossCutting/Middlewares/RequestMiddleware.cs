@@ -5,10 +5,10 @@ using System.Net;
 
 namespace FreeDictionary.CrossCutting.Middlewares
 {
-    public class ResponseTimeMiddleware
+    public class RequestMiddleware
     {
         private readonly RequestDelegate _next;
-        public ResponseTimeMiddleware(RequestDelegate next)
+        public RequestMiddleware(RequestDelegate next)
         {
             _next = next;
         }
@@ -17,11 +17,16 @@ namespace FreeDictionary.CrossCutting.Middlewares
         {
             try
             {
-                //Stopwatch watch = new Stopwatch();
-                //watch.Start();
+                Stopwatch watch = new Stopwatch();
+                watch.Start();
+                httpContext.Response.OnStarting(() =>
+                {
+                    watch.Stop();
+                    httpContext.Response.Headers.Add("x-response-time", watch.ElapsedMilliseconds.ToString());
+                    return Task.CompletedTask;
+                });
                 await _next(httpContext);
-                //watch.Stop();
-                //httpContext.Request.Headers.Add("x-time", watch.ElapsedMilliseconds.ToString());
+                watch.Stop();
             }
             catch (Exception ex)
             {

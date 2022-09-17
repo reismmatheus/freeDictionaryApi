@@ -135,7 +135,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseMiddleware<ResponseTimeMiddleware>();
+app.UseMiddleware<RequestMiddleware>();
 
 app.Run();
 

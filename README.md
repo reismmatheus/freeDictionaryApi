@@ -1,6 +1,6 @@
 # FreeDictionaryAPI
 
-A challenge for create an Api to do the proxy with FreeDictionaryApi, with the object to display the meaning of the English words.
+A challenge for create an Api to do the proxy with [FreeDictionaryApi](https://dictionaryapi.dev/), using a word database and authentication.
 
 ## Installation
 
@@ -19,10 +19,11 @@ Run in https://localhost:{port}
 
 ## Tech
 
-- [.NET] - Framework BackEnd
-- [SQL Server] - Sql Database
-- [Swagger] - API development tool
-- [Redis] - Cache
+- [.NET 6](https://dotnet.microsoft.com/en-us/learn)
+- [SQL Server](https://learn.microsoft.com/en-us/sql/?view=sql-server-ver16)
+- [EntityFramework](https://learn.microsoft.com/en-us/aspnet/entity-framework)
+- [Swagger](https://swagger.io/)
+- [Redis](https://redis.io/)
 
 ## Next Steps
 

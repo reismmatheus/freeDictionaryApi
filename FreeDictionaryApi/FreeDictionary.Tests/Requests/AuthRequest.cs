@@ -1,4 +1,5 @@
-﻿using FreeDictionary.Tests.Dependences;
+﻿using FreeDictionary.Application.Model;
+using FreeDictionary.Tests.Dependences;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -18,11 +19,11 @@ namespace FreeDictionary.Tests.Requests
             _client = client;
         }
 
-        public async Task<SinginResponse> SinginAsync(string email, string password)
+        public async Task<AuthModel> SinginAsync(string email, string password)
         {
             var responseLogin = await _client.PostAsJsonAsync("/auth/singin", new { email, password });
             var resultLogin = await responseLogin.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<SinginResponse>(resultLogin);
+            return JsonConvert.DeserializeObject<AuthModel>(resultLogin);
         }
     }
 }
