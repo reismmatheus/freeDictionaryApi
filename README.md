@@ -12,7 +12,7 @@ Install the dependencies and devDependencies and start the server.
 - In Package Manager Console, run "Update-Database"
 - Start
 
-Run in https://localhost:{port}
+Run in https://localhost:5000
 
 ##### Swagger
 ![Endpoints](https://raw.githubusercontent.com/reismmatheus/freeDictionaryApi/develop/blob/swagger.jpeg)
